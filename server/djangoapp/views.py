@@ -93,10 +93,25 @@ def get_dealer_details(request, dealerId):
         context = []
         dealer_reviews = get_dealer_reviews_from_cf(url, dealerId=dealerId)
         context.append(dealer_reviews)
-        return HttpResponse(context)    
+        return HttpResponse(dealer_reviews)    
     
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+def add_review(request, dealerId):
+    if request.method == 'POST':
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/16de9824-125f-4e45-9ee2-5dce97e89c69/dealership-package/post-review"
 
+        if request.user.is_authenticated:
+
+            review["dealership"] = 11
+            review["review"] = "This is a great car dealer"
+            review["name"] = "ManasaMadhavi" 
+            review["purchase"]=  'true'
+            review["purchase_date"]= '3/6/2020'
+            review["car_make"] = 'Audi'
+            review["car_model"] = 'A10'
+            review["car_year"] = 2015 
+
+            json_payload["review"] = review
+            result = post_request(url, json_payload, dealerId=dealerId)
+            return HttpResponse(result)
