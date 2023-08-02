@@ -25,7 +25,7 @@
         <ul class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
                 <li>
-                    <a class="btn btn-link" href="#">{{ user.first_name }}</a>
+                    <a class="btn btn-link" href="#">{{ user.username }}</a>
                     <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
                 </li>
             {% else %}
@@ -36,17 +36,47 @@
                         <input type="text" class="form-control" placeholder="Username" name="username" >
                         <input type="password" class="form-control" placeholder="Password" name="psw" >
                         <button class="btn btn-primary" type="submit">Login</button>
-                        <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                        <a class="btn btn-link" href="{% url 'djangoapp:signup' %}">Sign Up</a>
                     </div>
                 </form>
                 </li>
             {% endif %}
         </ul>
     </nav>
-    <!--Add a nav bar here -->
 
     <!--Add a dealer table here -->
-
+    <table class="table" id="table" data-filter-control="true">
+        <thead>
+            <tr>
+                <th data-field="id">ID</th>
+                <th data-field="Dealer name">Dealer Name</th>
+                <th data-field="City">City</th>
+                <th data-field="Address">Address</th>
+                <th data-field="Zip">Zip</th>
+                <th data-field="State" data-filter-control="select">State</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dealer in dealerships_list %}
+                <tr>
+                    <td>{{dealer.id}}</td>
+                    <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.full_name}}</a></td>
+                    <td>{{dealer.city}}</td>
+                    <td>{{dealer.address}}</td>
+                    <td>{{dealer.zip}}</td>
+                    <td>{{dealer.st}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     </body>
+    ...
+</body>
+
+<script>
+  $(function() {
+    $('#table').bootstrapTable()
+  })
+</script>
 
 </html>
