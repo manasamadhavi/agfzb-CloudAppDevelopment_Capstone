@@ -99,10 +99,11 @@ def get_dealer_details(request, dealerId):
     
 
 # Create a `add_review` view to submit a review
-def add_review(request, dealerId):
+def add_review(request, **kwargs):
     context = {}
+    dealerId = kwargs.get("dealerId")
     dealer_url = "https://us-south.functions.appdomain.cloud/api/v1/web/16de9824-125f-4e45-9ee2-5dce97e89c69/dealership-package/get-dealership"
-    dealer = get_dealer_by_id_from_cf(dealer_url, dealerId=dealerId)
+    dealer = get_dealer_from_cf(dealer_url, **kwargs)
     context["dealer"] = dealer
     if request.method == 'GET':
         # Get cars for the dealer
@@ -136,4 +137,4 @@ def add_review(request, dealerId):
             new_payload["review"] = payload
             review_post_url = "https://us-south.functions.appdomain.cloud/api/v1/web/16de9824-125f-4e45-9ee2-5dce97e89c69/dealership-package/post-review"
             post_request(review_post_url, new_payload, dealerId=dealerId)
-        return redirect("djangoapp:dealer_details", dealerId=dealerId)
+        return redirect("djangoapp/dealer_details", dealerId=dealerId)

@@ -11,7 +11,7 @@
 
 </head>
     <body>
-        <form action="{% url 'djangoapp:add_review' dealerId %}" method="post">
+        <form action="{% url 'djangoapp:add_review' dealerId %}" method="POST">
             <div class="container"> 
                 {% csrf_token %}
                 <textarea class="form-control" id="content" name="content" rows="2" required></textarea>

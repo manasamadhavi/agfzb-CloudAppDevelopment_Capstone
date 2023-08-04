@@ -58,8 +58,11 @@ def get_dealers_from_cf(url, **kwargs):
     results = []
     # Call get_request with a URL parameter
     state = kwargs.get("state")
+    dealerId = kwargs.get("dealerId")
     if state:
         json_result = get_request(url, state=state)
+    if id:
+        json_result = get_request(url, id = dealerId) 
     else:
         json_result = get_request(url)
     if json_result:
@@ -103,7 +106,7 @@ def get_dealer_by_id_from_cf(url, dealerId):
 def get_dealer_reviews_from_cf(url, **kwargs):
     results = []
     dealerId = kwargs.get("dealerId")
-    json_result = get_request(url, dealerId=dealerId)
+    json_result = get_request(url, **kwargs)
     if json_result:
         reviews = json_result["data"]['docs']
         for dealer_doc in reviews:
@@ -112,7 +115,7 @@ def get_dealer_reviews_from_cf(url, **kwargs):
             dealer_obj = DealerReview(dealership=dealer_doc["dealership"], name=dealer_doc["name"], purchase=dealer_doc["purchase"],
                                    review=dealer_doc["review"], purchase_date=dealer_doc["purchase_date"], car_make=dealer_doc["car_make"],
                                    car_model=dealer_doc["car_model"], car_year=dealer_doc["car_year"],sentiment =dealer_doc["sentiment"], id=dealer_doc["id"])
-        results.append(dealer_obj)
+            results.append(dealer_obj)
 
     return results
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
