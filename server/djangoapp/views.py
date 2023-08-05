@@ -40,14 +40,14 @@ def login_request(request):
             return redirect('djangoapp:index')
         else:
             context['message'] = "Invalid username or password."
-            return render(request, 'djangoapp/user_login_bootstrap.html', context)
+            return render(request, 'djangoapp/index.html', context)
     else:
-        return render(request, 'djangoapp/user_login_bootstrap.html', context)
+        return render(request, 'djangoapp/index.html', context)
 
 # Create a `logout_request` view to handle sign out request
 def logout_request(request):
     logout(request)
-    return redirect('onlinecourse:index')
+    return redirect('djangoapp:index')
 
 # Create a `registration_request` view to handle sign up request
 def signup(request):
@@ -99,20 +99,21 @@ def get_dealer_details(request, dealerId):
     
 
 # Create a `add_review` view to submit a review
-def add_review(request, **kwargs):
+def add_review(request, dealerId):
     context = {}
-    dealerId = kwargs.get("dealerId")
     dealer_url = "https://us-south.functions.appdomain.cloud/api/v1/web/16de9824-125f-4e45-9ee2-5dce97e89c69/dealership-package/get-dealership"
-    dealer = get_dealer_from_cf(dealer_url, **kwargs)
+    dealer = get_dealer_by_id_from_cf(dealer_url, dealerId)
     context["dealer"] = dealer
+    
     if request.method == 'GET':
+        
         # Get cars for the dealer
         cars = CarModel.objects.filter(dealerId=dealerId)
         print(cars)
         context["cars"] = cars
         
         return render(request, 'djangoapp/add_review.html', context)
-    elif request.method == 'POST':
+    if request.method == 'POST':
         if request.user.is_authenticated:
             username = request.user.username
             print(request.POST)
@@ -122,7 +123,7 @@ def add_review(request, **kwargs):
             payload["time"] = datetime.utcnow().isoformat()
             payload["name"] = username
             payload["dealership"] = dealerId
-            payload["id"] = dealerID
+            payload["id"] = dealerId
             payload["review"] = request.POST["content"]
             payload["purchase"] = False
             if "purchasecheck" in request.POST:
@@ -137,4 +138,4 @@ def add_review(request, **kwargs):
             new_payload["review"] = payload
             review_post_url = "https://us-south.functions.appdomain.cloud/api/v1/web/16de9824-125f-4e45-9ee2-5dce97e89c69/dealership-package/post-review"
             post_request(review_post_url, new_payload, dealerId=dealerId)
-        return redirect("djangoapp/dealer_details", dealerId=dealerId)
+        return redirect("djangoapp:dealer_details", dealerId=dealerId)

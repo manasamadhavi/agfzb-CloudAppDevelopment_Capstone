@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.timezone import now
-
+from django.core import serializers 
+import uuid
+import json
 
 # Create your models here.
 
@@ -93,3 +95,19 @@ class DealerReview:
 
     def __str__(self):
         return "name: "+ self.name +" Review: "+self.review + " Sentiment: "+ self.sentiment
+
+class ReviewPost:
+
+    def __init__(self, dealership, name, purchase, review):
+        self.dealership = dealership
+        self.name = name
+        self.purchase = purchase
+        self.review = review
+        self.purchase_date = ""
+        self.car_make = ""
+        self.car_model = ""
+        self.car_year = ""
+
+    def to_json(self):
+        return json.dumps(self, default=lambda o: o.__dict__,
+                            sort_keys=True, indent=4)

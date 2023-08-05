@@ -61,8 +61,6 @@ def get_dealers_from_cf(url, **kwargs):
     dealerId = kwargs.get("dealerId")
     if state:
         json_result = get_request(url, state=state)
-    if id:
-        json_result = get_request(url, id = dealerId) 
     else:
         json_result = get_request(url)
     if json_result:
