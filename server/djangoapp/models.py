@@ -12,7 +12,7 @@ import json
 # - Any other fields you would like to include in car make model
 # - __str__ method to print a car make object
 class CarMake(models.Model):
-    name = models.CharField(null=False, max_length=20)
+    car_make = models.CharField(null=False, max_length=20)
     description = models.CharField(max_length=1000)
 
     def __str__(self):
@@ -27,8 +27,8 @@ class CarMake(models.Model):
 # - Any other fields you would like to include in car model
 # - __str__ method to print a car make object
 class CarModel(models.Model):
-    carmake = models.ForeignKey(CarMake, on_delete=models.CASCADE)
-    name = models.CharField(null=False, max_length=20)
+    car_make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
+    car_model = models.CharField(null=False, max_length=20)
     dealerId = models.IntegerField()
     SEDAN = 'Sedan'
     SUV = 'SUV'
@@ -44,10 +44,10 @@ class CarModel(models.Model):
         choices=CHOICES,
         default=SEDAN
     )
-    year = models.DateField(null=True)
+    car_year = models.DateField(null=True)
 
     def __str__(self):
-        return self.carmake.name + "," + \
+        return self.car_model + "," + \
                self.type
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
